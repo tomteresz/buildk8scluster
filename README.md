@@ -1,2 +1,11 @@
-# buildk8scluster
-Hands-on Kubernetes cluster builds on Ubuntu 26 LTS, control-plane and worker-node upgrades, and Amazon EKS GPU infrastructure for AI/ML workloads.
+# Kubernetes Cluster Build 🚀
+
+This repository documents hands-on Kubernetes infrastructure projects and practical cluster operations.
+
+## What you'll find 🧰
+
+- 🐧 Building a Kubernetes cluster on Ubuntu 26
+- 🔄 Upgrading the Kubernetes control plane and worker nodes safely
+- ☁️ Building Amazon EKS clusters with GPU support for AI/ML workloads
+
+The goal is to keep repeatable notes, configuration examples, and operational runbooks for building and maintaining Kubernetes platforms.
