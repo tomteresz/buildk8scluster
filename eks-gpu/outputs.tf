@@ -5,7 +5,7 @@ output "network" {
     vpc_id             = aws_vpc.main_vpc.id
     vpc_cidr           = aws_vpc.main_vpc.cidr_block
     public_subnet_ids  = [aws_subnet.main_public1_a.id, aws_subnet.main_public2_b.id, aws_subnet.main_public3_c.id, aws_subnet.main_public4_a.id, aws_subnet.main_public5_b.id, aws_subnet.main_public6_c.id]
-    private_subnet_ids = [aws_subnet.main_private1_a.id, aws_subnet.main_private2_b.id, aws_subnet.main_private2_b.id, aws_subnet.main_private2_b.id, aws_subnet.main_private2_b.id]
+    private_subnet_ids = [aws_subnet.main_private1_a.id, aws_subnet.main_private2_b.id, aws_subnet.main_private3_c.id, aws_subnet.main_private4_a.id, aws_subnet.main_private5_b.id, aws_subnet.main_private6_c.id]
   }
 }
 
