@@ -21,10 +21,10 @@ variable "project_name" {
   default = "eks-gpu"
 }
 
-# variable "vpc_name" {
-#   type    = string
-#   default = "eks-gpu-vpc"
-# }
+variable "eks_cluster" {
+  type    = string
+  default = "eks-cluster"
+}
 
 variable "env" {
   type    = string
