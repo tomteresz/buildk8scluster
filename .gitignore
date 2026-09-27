@@ -40,3 +40,4 @@ terraform.rc
 # Backup
 backup07092026.zip
 backup25092026.zip
+eks-gpu.zip
