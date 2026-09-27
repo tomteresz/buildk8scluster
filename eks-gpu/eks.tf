@@ -95,7 +95,13 @@ resource "aws_eks_cluster" "eks_cluster" {
     endpoint_public_access  = true
   }
 
-  depends_on = [aws_iam_role_policy_attachment.eks_cluster_policy]
+  depends_on = [
+    aws_iam_role_policy_attachment.eks_cluster_policy,
+    aws_nat_gateway.vpc-nat,
+    aws_route_table_association.main_rtb_private4_a,
+    aws_route_table_association.main_rtb_private5_b,
+    aws_route_table_association.main_rtb_private6_c
+  ]
 }
 
 resource "aws_launch_template" "default" {
