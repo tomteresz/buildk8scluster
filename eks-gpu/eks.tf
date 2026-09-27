@@ -75,5 +75,53 @@ resource "aws_cloudwatch_log_group" "eks_cluster" {
   name              = "/aws/eks/${var.eks_cluster}/cluster"
   retention_in_days = 30
 
-  tags = var.tags
+  tags = {
+    Name = "${var.eks_cluster}-log-group"
+  }
+}
+
+resource "aws_eks_cluster" "eks_cluster" {
+  name     = var.project_name
+  role_arn = aws_iam_role.eks_cluster.arn
+  version  = var.eks_cluster_ver
+
+  vpc_config {
+    subnet_ids = [
+      aws_subnet.main_private4_a.id,
+      aws_subnet.main_private5_b.id,
+      aws_subnet.main_private6_c.id,
+    ]
+    endpoint_private_access = true
+    endpoint_public_access  = true
+  }
+
+  depends_on = [aws_iam_role_policy_attachment.eks_cluster_policy]
+}
+
+resource "aws_launch_template" "default" {
+  name_prefix            = "${var.project_name}-default-"
+  update_default_version = true
+
+  key_name = var.ec2_ssh_key
+
+  block_device_mappings {
+    device_name = "/dev/xvda"
+
+    ebs {
+      volume_size           = 20
+      volume_type           = "gp3"
+      delete_on_termination = true
+      encrypted             = true
+    }
+  }
+
+  # EC2 instance tags: applied to every new EKS worker node
+  tag_specifications {
+    resource_type = "instance"
+
+    tags = {
+      Name = "${var.project_name}-default-node"
+      Role = "eks-worker"
+    }
+  }
 }

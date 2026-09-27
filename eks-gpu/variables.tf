@@ -26,6 +26,16 @@ variable "eks_cluster" {
   default = "eks-cluster"
 }
 
+variable "eks_cluster_ver" {
+  type    = string
+  default = "1.35"
+}
+
+variable "ec2_ssh_key" {
+  type    = string
+  default = "ff-ec2-key"
+}
+
 variable "env" {
   type    = string
   default = "dev"
