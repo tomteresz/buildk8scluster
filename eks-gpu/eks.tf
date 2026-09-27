@@ -120,7 +120,7 @@ resource "aws_eks_cluster" "eks_cluster" {
 }
 
 resource "aws_launch_template" "default" {
-  name_prefix            = "${var.project_name}-default-"
+  name_prefix            = "${var.project_name}-default"
   update_default_version = true
 
   key_name = var.ec2_ssh_key
@@ -141,8 +141,15 @@ resource "aws_launch_template" "default" {
     resource_type = "instance"
 
     tags = {
-      Name = "${var.project_name}-default-node"
+      Name = "${var.project_name}-node"
       Role = "eks-worker"
+    }
+  }
+
+  tag_specifications {
+    resource_type = "volume"
+    tags = {
+      Name = "${var.project_name}-node-vol"
     }
   }
 }
@@ -158,6 +165,11 @@ resource "aws_launch_template" "default" {
 #     desired_size = 1
 #     min_size     = 1
 #     max_size     = 2
+#   }
+
+#  launch_template {
+#     id      = aws_launch_template.default.id
+#     version = aws_launch_template.default.latest_version
 #   }
 
 #   capacity_type = "SPOT"
