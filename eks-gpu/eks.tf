@@ -39,7 +39,7 @@ resource "aws_iam_role_policy_attachment" "eks_cluster_policy" {
 }
 
 resource "aws_iam_role" "eks_worker" {
-  name = "${var.project_name}-worker-role"
+  name = "${var.eks_cluster}-worker-role"
 
   assume_role_policy = jsonencode({
     Version = "2012-10-17"
@@ -69,4 +69,11 @@ resource "aws_iam_role_policy_attachment" "node_cni" {
 resource "aws_iam_role_policy_attachment" "node_ecr" {
   role       = aws_iam_role.eks_worker.name
   policy_arn = "arn:aws:iam::aws:policy/AmazonEC2ContainerRegistryPullOnly"
+}
+
+resource "aws_cloudwatch_log_group" "eks_cluster" {
+  name              = "/aws/eks/${var.eks_cluster}/cluster"
+  retention_in_days = 30
+
+  tags = var.tags
 }
