@@ -95,6 +95,21 @@ resource "aws_eks_cluster" "eks_cluster" {
     endpoint_public_access  = true
   }
 
+  encryption_config {
+    provider {
+      key_arn = aws_kms_key.eks_cluster.arn
+    }
+    resources = ["secrets"]
+  }
+
+  enabled_cluster_log_types = [
+    "api",
+    "audit",
+    "authenticator",
+    "controllerManager",
+    "scheduler",
+  ]
+
   depends_on = [
     aws_iam_role_policy_attachment.eks_cluster_policy,
     aws_nat_gateway.vpc-nat,
