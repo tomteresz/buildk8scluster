@@ -5,6 +5,10 @@ terraform {
       source  = "hashicorp/aws"
       version = "~> 6.66.0"
     }
+    tls = {
+      source  = "hashicorp/tls"
+      version = "~> 4.4.1"
+    }
   }
 
   backend "local" {
