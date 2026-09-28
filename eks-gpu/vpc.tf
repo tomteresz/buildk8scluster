@@ -78,7 +78,8 @@ resource "aws_subnet" "main_public4_a" {
   availability_zone = "${var.aws_region}a"
 
   tags = {
-    Name = "main-public4-a"
+    Name                     = "main-public4-a"
+    "kubernetes.io/role/elb" = "1"
   }
 }
 
@@ -89,7 +90,8 @@ resource "aws_subnet" "main_public5_b" {
   availability_zone = "${var.aws_region}b"
 
   tags = {
-    Name = "main-public5-b"
+    Name                     = "main-public5-b"
+    "kubernetes.io/role/elb" = "1"
   }
 }
 
@@ -100,7 +102,8 @@ resource "aws_subnet" "main_public6_c" {
   availability_zone = "${var.aws_region}c"
 
   tags = {
-    Name = "main-public6-c"
+    Name                     = "main-public6-c"
+    "kubernetes.io/role/elb" = "1"
   }
 }
 
@@ -144,7 +147,8 @@ resource "aws_subnet" "main_private4_a" {
   availability_zone = "${var.aws_region}a"
 
   tags = {
-    Name = "main-private4-a"
+    Name                              = "main-private4-a"
+    "kubernetes.io/role/internal-elb" = "1"
   }
 }
 
@@ -155,7 +159,8 @@ resource "aws_subnet" "main_private5_b" {
   availability_zone = "${var.aws_region}b"
 
   tags = {
-    Name = "main-private5-b"
+    Name                              = "main-private5-b"
+    "kubernetes.io/role/internal-elb" = "1"
   }
 }
 
@@ -166,6 +171,7 @@ resource "aws_subnet" "main_private6_c" {
   availability_zone = "${var.aws_region}c"
 
   tags = {
-    Name = "main-private6-c"
+    Name                              = "main-private6-c"
+    "kubernetes.io/role/internal-elb" = "1"
   }
 }

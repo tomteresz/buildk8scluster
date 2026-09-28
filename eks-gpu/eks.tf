@@ -155,7 +155,7 @@ resource "aws_launch_template" "default" {
 }
 
 data "aws_eks_cluster" "eks_cluster_data" {
-  name = aws_eks_cluster.eks_cluster.name
+  name       = aws_eks_cluster.eks_cluster.name
   depends_on = [aws_eks_cluster.eks_cluster]
 }
 
