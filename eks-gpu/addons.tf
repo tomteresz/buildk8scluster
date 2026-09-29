@@ -21,3 +21,13 @@ resource "aws_eks_addon" "kube_proxy" {
 
   depends_on = [aws_eks_cluster.eks_cluster]
 }
+
+resource "aws_eks_addon" "coredns" {
+  cluster_name = cluster_name = aws_eks_cluster.eks_cluster.name
+  addon_name   = "coredns"
+
+  resolve_conflicts_on_create = "OVERWRITE"
+  resolve_conflicts_on_update = "OVERWRITE"
+
+ depends_on = [aws_eks_cluster.eks_cluster]
+}
