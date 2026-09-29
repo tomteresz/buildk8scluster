@@ -61,10 +61,10 @@ resource "aws_iam_role_policy_attachment" "node_worker" {
   policy_arn = "arn:aws:iam::aws:policy/AmazonEKSWorkerNodePolicy"
 }
 
-resource "aws_iam_role_policy_attachment" "node_cni" {
-  role       = aws_iam_role.eks_worker.name
-  policy_arn = "arn:aws:iam::aws:policy/AmazonEKS_CNI_Policy"
-}
+# resource "aws_iam_role_policy_attachment" "node_cni" {
+#   role       = aws_iam_role.eks_worker.name
+#   policy_arn = "arn:aws:iam::aws:policy/AmazonEKS_CNI_Policy"
+# }
 
 resource "aws_iam_role_policy_attachment" "node_ecr" {
   role       = aws_iam_role.eks_worker.name
@@ -169,4 +169,42 @@ resource "aws_iam_openid_connect_provider" "eks_irsa" {
   thumbprint_list = [data.tls_certificate.eks_oidc_issuer.certificates[0].sha1_fingerprint]
 
   depends_on = [aws_eks_cluster.eks_cluster]
+}
+
+data "aws_iam_policy_document" "vpc_cni_assume" {
+  statement {
+    effect  = "Allow"
+    actions = ["sts:AssumeRoleWithWebIdentity"]
+
+    principals {
+      type        = "Federated"
+      identifiers = [aws_iam_openid_connect_provider.eks_irsa.arn]
+    }
+
+    condition {
+      test     = "StringEquals"
+      variable = "${replace(aws_iam_openid_connect_provider.eks_irsa.url, "https://", "")}:sub"
+      values   = ["system:serviceaccount:kube-system:aws-node"]
+    }
+
+    condition {
+      test     = "StringEquals"
+      variable = "${replace(aws_iam_openid_connect_provider.eks_irsa.url, "https://", "")}:aud"
+      values   = ["sts.amazonaws.com"]
+    }
+  }
+}
+
+resource "aws_iam_role" "vpc_cni" {
+  name               = "${var.eks_cluster}-vpc-cni"
+  assume_role_policy = data.aws_iam_policy_document.vpc_cni_assume.json
+
+  tags = {
+    Name = "${var.eks_cluster}-vpc-cni"
+  }
+}
+
+resource "aws_iam_role_policy_attachment" "vpc_cni" {
+  role       = aws_iam_role.vpc_cni.name
+  policy_arn = "arn:aws:iam::aws:policy/AmazonEKS_CNI_Policy"
 }
