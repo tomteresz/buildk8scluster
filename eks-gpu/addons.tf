@@ -23,21 +23,31 @@ resource "aws_eks_addon" "kube_proxy" {
 }
 
 resource "aws_eks_addon" "coredns" {
-  cluster_name = cluster_name = aws_eks_cluster.eks_cluster.name
+  cluster_name = aws_eks_cluster.eks_cluster.name
   addon_name   = "coredns"
 
   resolve_conflicts_on_create = "OVERWRITE"
   resolve_conflicts_on_update = "OVERWRITE"
 
- depends_on = [aws_eks_cluster.eks_cluster]
+  depends_on = [aws_eks_cluster.eks_cluster]
 }
 
 resource "aws_eks_addon" "metrics_server" {
-  cluster_name = cluster_name = aws_eks_cluster.eks_cluster.name
+  cluster_name = aws_eks_cluster.eks_cluster.name
   addon_name   = "metrics-server"
 
   resolve_conflicts_on_create = "OVERWRITE"
   resolve_conflicts_on_update = "OVERWRITE"
 
- depends_on = [aws_eks_cluster.eks_cluster]
+  depends_on = [aws_eks_cluster.eks_cluster]
+}
+
+resource "aws_eks_addon" "eks_node_monitoring_agent" {
+  cluster_name = aws_eks_cluster.eks_cluster.name
+  addon_name   = "eks-node-monitoring-agent"
+
+  resolve_conflicts_on_create = "OVERWRITE"
+  resolve_conflicts_on_update = "OVERWRITE"
+
+  depends_on = [aws_eks_cluster.eks_cluster]
 }
