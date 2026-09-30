@@ -20,3 +20,7 @@ output "state" {
 output "cloudwatch_log" {
   value = aws_cloudwatch_log_group.eks_cluster.name
 }
+
+output "my_ip_address" {
+  value = local.my_ip_cidr
+}

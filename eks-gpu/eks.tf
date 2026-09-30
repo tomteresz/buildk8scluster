@@ -93,6 +93,8 @@ resource "aws_eks_cluster" "eks_cluster" {
     ]
     endpoint_private_access = true
     endpoint_public_access  = true
+
+    public_access_cidrs = [local.my_ip_cidr]
   }
 
   encryption_config {
@@ -152,6 +154,10 @@ resource "aws_launch_template" "default" {
       Name = "${var.project_name}-node-vol"
     }
   }
+}
+
+data "http" "my_ip" {
+  url = "https://checkip.amazonaws.com/"
 }
 
 data "aws_eks_cluster" "eks_cluster_data" {
