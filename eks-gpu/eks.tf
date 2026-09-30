@@ -159,6 +159,11 @@ data "aws_eks_cluster" "eks_cluster_data" {
   depends_on = [aws_eks_cluster.eks_cluster]
 }
 
+data "aws_eks_cluster_auth" "eks_cluster_auth" {
+  name       = aws_eks_cluster.eks_cluster.name
+  depends_on = [aws_eks_cluster.eks_cluster]
+}
+
 data "tls_certificate" "eks_oidc_issuer" {
   url = local.eks_oidc_issuer
 }
@@ -207,4 +212,59 @@ resource "aws_iam_role" "vpc_cni" {
 resource "aws_iam_role_policy_attachment" "vpc_cni" {
   role       = aws_iam_role.vpc_cni.name
   policy_arn = "arn:aws:iam::aws:policy/AmazonEKS_CNI_Policy"
+}
+
+resource "aws_iam_policy" "lbc" {
+  name        = "${var.eks_cluster}-AWSLoadBalancerControllerIAMPolicy"
+  description = "IAM policy for AWS Load Balancer Controller"
+  policy      = file("${path.module}/policies/lbc_iam_policy.json")
+}
+
+data "aws_iam_policy_document" "lbc_assume" {
+  statement {
+    effect  = "Allow"
+    actions = ["sts:AssumeRoleWithWebIdentity"]
+
+    principals {
+      type        = "Federated"
+      identifiers = [aws_iam_openid_connect_provider.eks_irsa.arn]
+    }
+
+    condition {
+      test     = "StringEquals"
+      variable = "${replace(aws_iam_openid_connect_provider.eks_irsa.url, "https://", "")}:sub"
+      values   = ["system:serviceaccount:kube-system:aws-load-balancer-controller"]
+    }
+
+    condition {
+      test     = "StringEquals"
+      variable = "${replace(aws_iam_openid_connect_provider.eks_irsa.url, "https://", "")}:aud"
+      values   = ["sts.amazonaws.com"]
+    }
+  }
+}
+
+resource "aws_iam_role" "lbc" {
+  name               = "${var.eks_cluster}-lbc"
+  assume_role_policy = data.aws_iam_policy_document.lbc_assume.json
+
+  tags = {
+    Name = "${var.eks_cluster}-lbc"
+  }
+}
+
+resource "aws_iam_role_policy_attachment" "lbc" {
+  role       = aws_iam_role.lbc.name
+  policy_arn = aws_iam_policy.lbc.arn
+}
+
+resource "kubernetes_service_account_v1" "lbc_sa" {
+  metadata {
+    name      = "aws-load-balancer-controller"
+    namespace = "kube-system"
+
+    annotations = {
+      "eks.amazonaws.com/role-arn" = aws_iam_role.lbc.arn
+    }
+  }
 }

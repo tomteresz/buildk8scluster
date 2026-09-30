@@ -9,6 +9,9 @@ terraform {
       source  = "hashicorp/tls"
       version = "~> 4.4.1"
     }
+    helm = {
+      source = "hashicorp/helm", version = "~> 3.3.0"
+    }
   }
 
   backend "local" {
@@ -41,6 +44,20 @@ provider "aws" {
       Owner       = "TT"
       Project     = var.project_name
     }
+  }
+}
+
+provider "kubernetes" {
+  host                   = data.aws_eks_cluster.eks_cluster_data.endpoint
+  cluster_ca_certificate = base64decode(data.aws_eks_cluster.eks_cluster_data.certificate_authority[0].data)
+  token                  = data.aws_eks_cluster_auth.eks_cluster_auth.token
+}
+
+provider "helm" {
+  kubernetes = {
+    host                   = data.aws_eks_cluster.eks_cluster_data.endpoint
+    cluster_ca_certificate = base64decode(data.aws_eks_cluster.eks_cluster_data.certificate_authority[0].data)
+    token                  = data.aws_eks_cluster_auth.eks_cluster_auth.token
   }
 }
 
