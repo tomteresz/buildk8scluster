@@ -274,3 +274,47 @@ resource "kubernetes_service_account_v1" "lbc_sa" {
     }
   }
 }
+
+data "aws_iam_policy_document" "ext_dns_assume" {
+  statement {
+    effect  = "Allow"
+    actions = ["sts:AssumeRoleWithWebIdentity"]
+
+    principals {
+      type        = "Federated"
+      identifiers = [aws_iam_openid_connect_provider.eks_irsa.arn]
+    }
+
+    condition {
+      test     = "StringEquals"
+      variable = "${replace(aws_iam_openid_connect_provider.eks_irsa.url, "https://", "")}:sub"
+      values   = ["system:serviceaccount:external-dns:external-dns"]
+    }
+
+    condition {
+      test     = "StringEquals"
+      variable = "${replace(aws_iam_openid_connect_provider.eks_irsa.url, "https://", "")}:aud"
+      values   = ["sts.amazonaws.com"]
+    }
+  }
+}
+
+resource "aws_iam_policy" "ext_dns" {
+  name        = "${var.eks_cluster}-AWSExternalDnsIAMPolicy"
+  description = "IAM policy for External Dns Addon"
+  policy      = file("${path.module}/policies/ext_dns_iam_policy.json")
+}
+
+resource "aws_iam_role" "ext_dns" {
+  name               = "${var.eks_cluster}-ext-dns"
+  assume_role_policy = data.aws_iam_policy_document.ext_dns_assume.json
+
+  tags = {
+    Name = "${var.eks_cluster}-ext-dns"
+  }
+}
+
+resource "aws_iam_role_policy_attachment" "ext_dns" {
+  role       = aws_iam_role.ext_dns.name
+  policy_arn = aws_iam_policy.ext_dns.arn
+}

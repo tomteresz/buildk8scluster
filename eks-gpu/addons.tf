@@ -52,3 +52,17 @@ resource "aws_eks_addon" "eks_node_monitoring_agent" {
   depends_on = [aws_eks_cluster.eks_cluster]
 }
 
+resource "aws_eks_addon" "external_dns" {
+  cluster_name             = aws_eks_cluster.eks_cluster.name
+  addon_name               = "external-dns"
+  service_account_role_arn = aws_iam_role.ext_dns.arn
+
+  resolve_conflicts_on_create = "OVERWRITE"
+  resolve_conflicts_on_update = "OVERWRITE"
+
+  depends_on = [
+    aws_iam_openid_connect_provider.eks_irsa,
+    aws_iam_role_policy_attachment.ext_dns,
+  ]
+}
+
