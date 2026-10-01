@@ -60,6 +60,10 @@ resource "aws_eks_addon" "external_dns" {
   resolve_conflicts_on_create = "OVERWRITE"
   resolve_conflicts_on_update = "OVERWRITE"
 
+  configuration_values = jsonencode({
+    policy = "sync"
+  })
+
   depends_on = [
     aws_iam_openid_connect_provider.eks_irsa,
     aws_iam_role_policy_attachment.ext_dns,
