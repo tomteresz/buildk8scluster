@@ -20,7 +20,7 @@
         "route53:ListTagsForResource"
       ],
       "Resource": [
-        "arn:aws:route53:::hostedzone/Z01888861IIFECUO0AVEP"
+        "*"
       ]
     }
   ]     
