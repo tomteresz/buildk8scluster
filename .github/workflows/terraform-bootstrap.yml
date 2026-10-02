@@ -17,9 +17,6 @@ jobs:
     runs-on: ubuntu-24.04
 
     steps:
-      - name: Verify AWS identity
-        run: aws sts get-caller-identity
-
       - name: Checkout repository
         uses: actions/checkout@v7
 
@@ -28,6 +25,9 @@ jobs:
         with:
           role-to-assume: arn:aws:iam::651629222199:role/github-access-role
           aws-region: ${{ env.AWS_REGION }}
+          
+      - name: Verify AWS identity
+        run: aws sts get-caller-identity
 
       # ==========================================
       # S3 backend bucket
