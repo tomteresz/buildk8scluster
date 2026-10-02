@@ -17,22 +17,21 @@ terraform {
     }
   }
 
-  backend "local" {
-    path = "mystate/terraform.tfstate"
-  }
+  # backend "local" {
+  #   path = "mystate/terraform.tfstate"
+  # }
 
-  /* 
+
   backend "s3" {
     #bucket name - set the permision, versioning and encryption
-    bucket = "tomtechlab-tf-state"
+    bucket = "eks-gpu-state"
     #key is just a name, can be anything as i understand
-    key     = "esp8266/terraform.tfstate"
+    key     = "state/terraform.tfstate"
     region  = "eu-central-1"
     encrypt = true
     #the name of the dynamodb table, key MUST be "LockID"
-    dynamodb_table = "tomtechlab-tf-lock"
+    dynamodb_table = "eks-gpu-dev-lock"
   }
- */
 
 }
 
@@ -65,7 +64,7 @@ provider "helm" {
 }
 
 resource "aws_s3_bucket" "terraform_state" {
-  bucket = "${local.project}-state"
+  bucket = "eks-gpu-state"
 
   tags = {
     Name        = "${local.project}-state"
@@ -108,7 +107,7 @@ resource "aws_s3_bucket_public_access_block" "terraform_state" {
 # =============================================
 
 resource "aws_dynamodb_table" "terraform_lock" {
-  name         = "${local.project}-lock"
+  name         = "eks-gpu-dev-lock"
   billing_mode = "PAY_PER_REQUEST" # Recommended for locking tables
 
   hash_key = "LockID"
