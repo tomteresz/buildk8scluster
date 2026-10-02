@@ -85,6 +85,11 @@ resource "aws_eks_cluster" "eks_cluster" {
   role_arn = aws_iam_role.eks_cluster.arn
   version  = var.eks_cluster_ver
 
+  access_config {
+    authentication_mode                         = "API_AND_CONFIG_MAP"
+    bootstrap_cluster_creator_admin_permissions = true
+  }
+
   vpc_config {
     subnet_ids = [
       aws_subnet.main_private4_a.id,
@@ -95,9 +100,10 @@ resource "aws_eks_cluster" "eks_cluster" {
     endpoint_public_access  = true
 
     #this one is dynamic from local terraform
-    public_access_cidrs = [local.my_ip_cidr]
+    public_access_cidrs = [local.my_ip_cidr,
+      "46.205.198.132/32",
+    ]
     #this one is static when terraform running via Github
-    public_access_cidrs = ["46.205.198.132/32"]
   }
 
   encryption_config {
