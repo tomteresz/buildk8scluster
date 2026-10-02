@@ -182,6 +182,15 @@ resource "aws_iam_openid_connect_provider" "eks_irsa" {
   depends_on = [aws_eks_cluster.eks_cluster]
 }
 
+resource "aws_iam_role" "vpc_cni" {
+  name               = "${var.eks_cluster}-vpc-cni"
+  assume_role_policy = data.aws_iam_policy_document.vpc_cni_assume.json
+
+  tags = {
+    Name = "${var.eks_cluster}-vpc-cni"
+  }
+}
+
 data "aws_iam_policy_document" "vpc_cni_assume" {
   statement {
     effect  = "Allow"
@@ -203,15 +212,6 @@ data "aws_iam_policy_document" "vpc_cni_assume" {
       variable = "${replace(aws_iam_openid_connect_provider.eks_irsa.url, "https://", "")}:aud"
       values   = ["sts.amazonaws.com"]
     }
-  }
-}
-
-resource "aws_iam_role" "vpc_cni" {
-  name               = "${var.eks_cluster}-vpc-cni"
-  assume_role_policy = data.aws_iam_policy_document.vpc_cni_assume.json
-
-  tags = {
-    Name = "${var.eks_cluster}-vpc-cni"
   }
 }
 
