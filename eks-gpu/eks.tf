@@ -102,7 +102,7 @@ resource "aws_eks_cluster" "eks_cluster" {
     #this one is dynamic from local terraform
     public_access_cidrs = [
       #local.my_ip_cidr,
-      "0.0.0.0",
+      "0.0.0.0/0",
     ]
     #this one is static when terraform running via Github
   }
