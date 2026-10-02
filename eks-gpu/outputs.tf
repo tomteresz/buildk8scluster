@@ -9,13 +9,13 @@ output "network" {
   }
 }
 
-output "state" {
-  description = "S3 and DynamoDB"
-  value = {
-    s3-bucket-name = aws_s3_bucket.terraform_state.bucket
-    dynamodb-name  = aws_dynamodb_table.terraform_lock.name
-  }
-}
+# output "state" {
+#   description = "S3 and DynamoDB"
+#   value = {
+#     s3-bucket-name = aws_s3_bucket.terraform_state.bucket
+#     dynamodb-name  = aws_dynamodb_table.terraform_lock.name
+#   }
+# }
 
 output "cloudwatch_log" {
   value = aws_cloudwatch_log_group.eks_cluster.name
