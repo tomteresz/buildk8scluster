@@ -130,6 +130,23 @@ resource "aws_eks_cluster" "eks_cluster" {
   ]
 }
 
+resource "aws_eks_access_entry" "eks_admin" {
+  cluster_name  = aws_eks_cluster.eks_cluster.name
+  principal_arn = "arn:aws:iam::651629222199:user/admino-cli"
+  type          = "STANDARD"
+}
+
+resource "aws_eks_access_policy_association" "eks_admin" {
+  cluster_name  = aws_eks_cluster.eks_cluster.name
+  principal_arn = aws_eks_access_entry.eks_admin.principal_arn
+
+  policy_arn = "arn:aws:eks::aws:cluster-access-policy/AmazonEKSClusterAdminPolicy"
+
+  access_scope {
+    type = "cluster"
+  }
+}
+
 resource "aws_launch_template" "default" {
   name_prefix            = "${var.project_name}-default"
   update_default_version = true
