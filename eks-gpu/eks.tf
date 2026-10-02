@@ -95,7 +95,7 @@ resource "aws_eks_cluster" "eks_cluster" {
     endpoint_public_access  = true
 
     #this one is dynamic from local terraform
-    #public_access_cidrs = [local.my_ip_cidr]
+    public_access_cidrs = [local.my_ip_cidr]
     #this one is static when terraform running via Github
     public_access_cidrs = ["46.205.198.132/32"]
   }
