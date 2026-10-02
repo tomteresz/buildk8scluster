@@ -63,66 +63,66 @@ provider "helm" {
   }
 }
 
-resource "aws_s3_bucket" "terraform_state" {
-  bucket = "eks-gpu-state"
+# resource "aws_s3_bucket" "terraform_state" {
+#   bucket = "eks-gpu-state"
 
-  tags = {
-    Name        = "${local.project}-state"
-    Environment = "Shared"
-    Purpose     = "Terraform Remote Backend"
-  }
-}
+#   tags = {
+#     Name        = "${local.project}-state"
+#     Environment = "Shared"
+#     Purpose     = "Terraform Remote Backend"
+#   }
+# }
 
-# Enable versioning (highly recommended for state files)
-resource "aws_s3_bucket_versioning" "terraform_state" {
-  bucket = aws_s3_bucket.terraform_state.id
-  versioning_configuration {
-    status = "Enabled"
-  }
-}
+# # Enable versioning (highly recommended for state files)
+# resource "aws_s3_bucket_versioning" "terraform_state" {
+#   bucket = aws_s3_bucket.terraform_state.id
+#   versioning_configuration {
+#     status = "Enabled"
+#   }
+# }
 
-# Enable server-side encryption by default (using AWS KMS or SSE-S3)
-resource "aws_s3_bucket_server_side_encryption_configuration" "terraform_state" {
-  bucket = aws_s3_bucket.terraform_state.id
+# # Enable server-side encryption by default (using AWS KMS or SSE-S3)
+# resource "aws_s3_bucket_server_side_encryption_configuration" "terraform_state" {
+#   bucket = aws_s3_bucket.terraform_state.id
 
-  rule {
-    apply_server_side_encryption_by_default {
-      sse_algorithm = "AES256" # You can change to "aws:kms" if you prefer KMS
-    }
-  }
-}
+#   rule {
+#     apply_server_side_encryption_by_default {
+#       sse_algorithm = "AES256" # You can change to "aws:kms" if you prefer KMS
+#     }
+#   }
+# }
 
-# Block all public access (security best practice)
-resource "aws_s3_bucket_public_access_block" "terraform_state" {
-  bucket = aws_s3_bucket.terraform_state.id
+# # Block all public access (security best practice)
+# resource "aws_s3_bucket_public_access_block" "terraform_state" {
+#   bucket = aws_s3_bucket.terraform_state.id
 
-  block_public_acls       = true
-  block_public_policy     = true
-  ignore_public_acls      = true
-  restrict_public_buckets = true
-}
+#   block_public_acls       = true
+#   block_public_policy     = true
+#   ignore_public_acls      = true
+#   restrict_public_buckets = true
+# }
 
-# =============================================
-# DynamoDB Table for State Locking
-# =============================================
+# # =============================================
+# # DynamoDB Table for State Locking
+# # =============================================
 
-resource "aws_dynamodb_table" "terraform_lock" {
-  name         = "eks-gpu-dev-lock"
-  billing_mode = "PAY_PER_REQUEST" # Recommended for locking tables
+# resource "aws_dynamodb_table" "terraform_lock" {
+#   name         = "eks-gpu-dev-lock"
+#   billing_mode = "PAY_PER_REQUEST" # Recommended for locking tables
 
-  hash_key = "LockID"
+#   hash_key = "LockID"
 
-  attribute {
-    name = "LockID"
-    type = "S"
-  }
+#   attribute {
+#     name = "LockID"
+#     type = "S"
+#   }
 
-  tags = {
-    Name        = "Terraform State Lock Table"
-    Environment = "Shared"
-    Purpose     = "Terraform State Locking"
-  }
-}
+#   tags = {
+#     Name        = "Terraform State Lock Table"
+#     Environment = "Shared"
+#     Purpose     = "Terraform State Locking"
+#   }
+# }
 
 
 
