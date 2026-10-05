@@ -1,0 +1,21 @@
+# test-ingress.yaml
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: test-alb
+  namespace: default
+  annotations:
+    alb.ingress.kubernetes.io/scheme: internet-facing
+    alb.ingress.kubernetes.io/target-type: ip
+spec:
+  ingressClassName: alb
+  rules:
+    - http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: non-existent-service
+                port:
+                  number: 80
