@@ -1,26 +1,26 @@
-output "network" {
-  description = "VPC infra details"
-  value = {
-    region             = var.aws_region
-    vpc_id             = aws_vpc.main_vpc.id
-    vpc_cidr           = aws_vpc.main_vpc.cidr_block
-    public_subnet_ids  = [aws_subnet.main_public1_a.id, aws_subnet.main_public2_b.id, aws_subnet.main_public3_c.id, aws_subnet.main_public4_a.id, aws_subnet.main_public5_b.id, aws_subnet.main_public6_c.id]
-    private_subnet_ids = [aws_subnet.main_private1_a.id, aws_subnet.main_private2_b.id, aws_subnet.main_private3_c.id, aws_subnet.main_private4_a.id, aws_subnet.main_private5_b.id, aws_subnet.main_private6_c.id]
-  }
-}
-
-# output "state" {
-#   description = "S3 and DynamoDB"
+# output "network" {
+#   description = "VPC infra details"
 #   value = {
-#     s3-bucket-name = aws_s3_bucket.terraform_state.bucket
-#     dynamodb-name  = aws_dynamodb_table.terraform_lock.name
+#     region             = var.aws_region
+#     vpc_id             = module.vpc.vpc_id
+#     vpc_cidr           = module.vpc.vpc_cidr
+#     public_subnet_ids  = [aws_subnet.main_public1_a.id, aws_subnet.main_public2_b.id, aws_subnet.main_public3_c.id, aws_subnet.main_public4_a.id, aws_subnet.main_public5_b.id, aws_subnet.main_public6_c.id]
+#     private_subnet_ids = [aws_subnet.main_private1_a.id, aws_subnet.main_private2_b.id, aws_subnet.main_private3_c.id, aws_subnet.main_private4_a.id, aws_subnet.main_private5_b.id, aws_subnet.main_private6_c.id]
 #   }
 # }
 
-output "cloudwatch_log" {
-  value = aws_cloudwatch_log_group.eks_cluster.name
-}
+# # output "state" {
+# #   description = "S3 and DynamoDB"
+# #   value = {
+# #     s3-bucket-name = aws_s3_bucket.terraform_state.bucket
+# #     dynamodb-name  = aws_dynamodb_table.terraform_lock.name
+# #   }
+# # }
 
-output "my_ip_address" {
-  value = local.my_ip_cidr
-}
+# output "cloudwatch_log" {
+#   value = aws_cloudwatch_log_group.eks_cluster.name
+# }
+
+# output "my_ip_address" {
+#   value = local.my_ip_cidr
+# }

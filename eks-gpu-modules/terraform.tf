@@ -17,21 +17,21 @@ terraform {
     }
   }
 
-  # backend "local" {
-  #   path = "mystate/terraform.tfstate"
-  # }
-
-
-  backend "s3" {
-    #bucket name - set the permision, versioning and encryption
-    bucket = "eks-gpu-state"
-    #key is just a name, can be anything as i understand
-    key     = "state/terraform.tfstate"
-    region  = "eu-central-1"
-    encrypt = true
-    #the name of the dynamodb table, key MUST be "LockID"
-    dynamodb_table = "eks-gpu-dev-lock"
+  backend "local" {
+    path = "mystate/terraform.tfstate"
   }
+
+
+  # backend "s3" {
+  #   #bucket name - set the permision, versioning and encryption
+  #   bucket = "eks-gpu-state"
+  #   #key is just a name, can be anything as i understand
+  #   key     = "state/terraform.tfstate"
+  #   region  = "eu-central-1"
+  #   encrypt = true
+  #   #the name of the dynamodb table, key MUST be "LockID"
+  #   dynamodb_table = "eks-gpu-dev-lock"
+  # }
 
 }
 
@@ -49,19 +49,19 @@ provider "aws" {
   }
 }
 
-provider "kubernetes" {
-  host                   = aws_eks_cluster.eks_cluster.endpoint
-  cluster_ca_certificate = base64decode(aws_eks_cluster.eks_cluster.certificate_authority[0].data)
-  token                  = data.aws_eks_cluster_auth.eks_cluster_auth.token
-}
+# provider "kubernetes" {
+#   host                   = aws_eks_cluster.eks_cluster.endpoint
+#   cluster_ca_certificate = base64decode(aws_eks_cluster.eks_cluster.certificate_authority[0].data)
+#   token                  = data.aws_eks_cluster_auth.eks_cluster_auth.token
+# }
 
-provider "helm" {
-  kubernetes = {
-    host                   = aws_eks_cluster.eks_cluster.endpoint
-    cluster_ca_certificate = base64decode(aws_eks_cluster.eks_cluster.certificate_authority[0].data)
-    token                  = data.aws_eks_cluster_auth.eks_cluster_auth.token
-  }
-}
+# provider "helm" {
+#   kubernetes = {
+#     host                   = aws_eks_cluster.eks_cluster.endpoint
+#     cluster_ca_certificate = base64decode(aws_eks_cluster.eks_cluster.certificate_authority[0].data)
+#     token                  = data.aws_eks_cluster_auth.eks_cluster_auth.token
+#   }
+# }
 
 # resource "aws_s3_bucket" "terraform_state" {
 #   bucket = "eks-gpu-state"

@@ -1,195 +1,128 @@
 # main_route-table
 resource "aws_route_table" "default" {
-  vpc_id = aws_vpc.main_vpc.id
+  vpc_id = module.vpc.vpc_id
 
   tags = {
     Name = "default-route"
   }
 }
 
-# public-route-table
-resource "aws_route_table" "main_rtb_public" {
-  vpc_id = aws_vpc.main_vpc.id
+module "route_table_public1_a" {
+  source = "./modules/routes"
 
-  route {
-    cidr_block = "0.0.0.0/0"
-    gateway_id = aws_internet_gateway.main_igw.id
-  }
-
-  tags = {
-    "Name" = "main-rtb-public"
-  }
+  cidr_block = "0.0.0.0/0"
+  vpc_id     = module.vpc.vpc_id
+  gateway_id = module.vpc.main_igw_id
+  subnet_id  = module.main_public1_a.subnet_id
+  route_name = "main-rtb-public1-a"
 }
 
-# private-route-table-1
-resource "aws_route_table" "main_rtb_private1_a" {
-  vpc_id = aws_vpc.main_vpc.id
+module "route_table_public2_b" {
+  source = "./modules/routes"
 
-  route {
-    cidr_block     = "0.0.0.0/0"
-    nat_gateway_id = aws_nat_gateway.vpc-nat.id
-  }
-
-  tags = {
-    Name = "main-rtb-private1-a"
-  }
+  cidr_block = "0.0.0.0/0"
+  vpc_id     = module.vpc.vpc_id
+  gateway_id = module.vpc.main_igw_id
+  subnet_id  = module.main_public2_b.subnet_id
+  route_name = "main-rtb-public2-b"
 }
 
-# private-route-table-2
-resource "aws_route_table" "main_rtb_private2_b" {
-  vpc_id = aws_vpc.main_vpc.id
+module "route_table_public3_c" {
+  source = "./modules/routes"
 
-  route {
-    cidr_block     = "0.0.0.0/0"
-    nat_gateway_id = aws_nat_gateway.vpc-nat.id
-  }
-
-  tags = {
-    Name = "main-rtb-private2-b"
-  }
+  cidr_block = "0.0.0.0/0"
+  vpc_id     = module.vpc.vpc_id
+  gateway_id = module.vpc.main_igw_id
+  subnet_id  = module.main_public3_c.subnet_id
+  route_name = "main-rtb-public3-c"
 }
 
-# private-route-table-3
-resource "aws_route_table" "main_rtb_private3_c" {
-  vpc_id = aws_vpc.main_vpc.id
+module "route_table_public4_a" {
+  source = "./modules/routes"
 
-  route {
-    cidr_block     = "0.0.0.0/0"
-    nat_gateway_id = aws_nat_gateway.vpc-nat.id
-  }
-
-  tags = {
-    Name = "main-rtb-private3-c"
-  }
+  cidr_block = "0.0.0.0/0"
+  vpc_id     = module.vpc.vpc_id
+  gateway_id = module.vpc.main_igw_id
+  subnet_id  = module.main_public4_a.subnet_id
+  route_name = "main-rtb-public4-a"
 }
 
-# private-route-table-4
-resource "aws_route_table" "main_rtb_private4_a" {
-  vpc_id = aws_vpc.main_vpc.id
+module "route_table_public5_b" {
+  source = "./modules/routes"
 
-  route {
-    cidr_block     = "0.0.0.0/0"
-    nat_gateway_id = aws_nat_gateway.vpc-nat.id
-  }
-
-  tags = {
-    Name = "main-rtb-private4-a"
-  }
+  cidr_block = "0.0.0.0/0"
+  vpc_id     = module.vpc.vpc_id
+  gateway_id = module.vpc.main_igw_id
+  subnet_id  = module.main_public5_b.subnet_id
+  route_name = "main-rtb-public5-b"
 }
 
-# private-route-table-5
-resource "aws_route_table" "main_rtb_private5_b" {
-  vpc_id = aws_vpc.main_vpc.id
+module "route_table_public6_c" {
+  source = "./modules/routes"
 
-  route {
-    cidr_block     = "0.0.0.0/0"
-    nat_gateway_id = aws_nat_gateway.vpc-nat.id
-  }
-
-  tags = {
-    Name = "main-rtb-private5-b"
-  }
+  cidr_block = "0.0.0.0/0"
+  vpc_id     = module.vpc.vpc_id
+  gateway_id = module.vpc.main_igw_id
+  subnet_id  = module.main_public6_c.subnet_id
+  route_name = "main-rtb-public6-c"
 }
 
-# private-route-table-6
-resource "aws_route_table" "main_rtb_private6_c" {
-  vpc_id = aws_vpc.main_vpc.id
+module "route_table_private1_a" {
+  source = "./modules/routes"
 
-  route {
-    cidr_block     = "0.0.0.0/0"
-    nat_gateway_id = aws_nat_gateway.vpc-nat.id
-  }
-
-  tags = {
-    Name = "main-rtb-private6-c"
-  }
+  cidr_block     = "0.0.0.0/0"
+  vpc_id         = module.vpc.vpc_id
+  nat_gateway_id = module.vpc.vpc_nat_id
+  subnet_id      = module.main_private1_a.subnet_id
+  route_name     = "main-rtb-private1-a"
 }
 
-# subnet-association-with-route-table-public1
-resource "aws_route_table_association" "main_rtb_public1_a" {
-  subnet_id      = aws_subnet.main_public1_a.id
-  route_table_id = aws_route_table.main_rtb_public.id
+module "route_table_private2_b" {
+  source = "./modules/routes"
+
+  cidr_block     = "0.0.0.0/0"
+  vpc_id         = module.vpc.vpc_id
+  nat_gateway_id = module.vpc.vpc_nat_id
+  subnet_id      = module.main_private2_b.subnet_id
+  route_name     = "main-rtb-private2-b"
 }
 
-# subnet-association-with-route-table-public2
-resource "aws_route_table_association" "main_rtb_public2_b" {
-  subnet_id      = aws_subnet.main_public2_b.id
-  route_table_id = aws_route_table.main_rtb_public.id
+module "route_table_private3_c" {
+  source = "./modules/routes"
+
+  cidr_block     = "0.0.0.0/0"
+  vpc_id         = module.vpc.vpc_id
+  nat_gateway_id = module.vpc.vpc_nat_id
+  subnet_id      = module.main_private3_c.subnet_id
+  route_name     = "main-rtb-private3-c"
 }
 
-# subnet-association-with-route-table-public3
-resource "aws_route_table_association" "main_rtb_public3_c" {
-  subnet_id      = aws_subnet.main_public3_c.id
-  route_table_id = aws_route_table.main_rtb_public.id
+module "route_table_private4_a" {
+  source = "./modules/routes"
+
+  cidr_block     = "0.0.0.0/0"
+  vpc_id         = module.vpc.vpc_id
+  nat_gateway_id = module.vpc.vpc_nat_id
+  subnet_id      = module.main_private4_a.subnet_id
+  route_name     = "main-rtb-private4-a"
 }
 
-# subnet-association-with-route-table-public4
-resource "aws_route_table_association" "main_rtb_public4_a" {
-  subnet_id      = aws_subnet.main_public4_a.id
-  route_table_id = aws_route_table.main_rtb_public.id
+module "route_table_private5_b" {
+  source = "./modules/routes"
+
+  cidr_block     = "0.0.0.0/0"
+  vpc_id         = module.vpc.vpc_id
+  nat_gateway_id = module.vpc.vpc_nat_id
+  subnet_id      = module.main_private5_b.subnet_id
+  route_name     = "main-rtb-private5-b"
 }
 
-# subnet-association-with-route-table-public5
-resource "aws_route_table_association" "main_rtb_public5_b" {
-  subnet_id      = aws_subnet.main_public5_b.id
-  route_table_id = aws_route_table.main_rtb_public.id
-}
+module "route_table_private6_c" {
+  source = "./modules/routes"
 
-# subnet-association-with-route-table-public6
-resource "aws_route_table_association" "main_rtb_public6_c" {
-  subnet_id      = aws_subnet.main_public6_c.id
-  route_table_id = aws_route_table.main_rtb_public.id
-}
-
-# subnet-association-with-route-table-private1
-resource "aws_route_table_association" "main_rtb_private1_a" {
-  subnet_id      = aws_subnet.main_private1_a.id
-  route_table_id = aws_route_table.main_rtb_private1_a.id
-}
-
-# subnet-association-with-route-table-private2
-resource "aws_route_table_association" "main_rtb_private2_b" {
-  subnet_id      = aws_subnet.main_private2_b.id
-  route_table_id = aws_route_table.main_rtb_private2_b.id
-}
-
-# subnet-association-with-route-table-private3
-resource "aws_route_table_association" "main_rtb_private3_c" {
-  subnet_id      = aws_subnet.main_private3_c.id
-  route_table_id = aws_route_table.main_rtb_private3_c.id
-}
-
-# subnet-association-with-route-table-private4
-resource "aws_route_table_association" "main_rtb_private4_a" {
-  subnet_id      = aws_subnet.main_private4_a.id
-  route_table_id = aws_route_table.main_rtb_private4_a.id
-}
-
-# subnet-association-with-route-table-private5
-resource "aws_route_table_association" "main_rtb_private5_b" {
-  subnet_id      = aws_subnet.main_private5_b.id
-  route_table_id = aws_route_table.main_rtb_private5_b.id
-}
-
-# subnet-association-with-route-table-private6
-resource "aws_route_table_association" "main_rtb_private6_c" {
-  subnet_id      = aws_subnet.main_private6_c.id
-  route_table_id = aws_route_table.main_rtb_private6_c.id
-}
-
-resource "aws_internet_gateway" "main_igw" {
-  vpc_id = aws_vpc.main_vpc.id
-
-  tags = {
-    Name = "${local.project}-igw"
-  }
-}
-
-resource "aws_nat_gateway" "vpc-nat" {
-  vpc_id            = aws_vpc.main_vpc.id
-  availability_mode = "regional"
-  depends_on        = [aws_internet_gateway.main_igw]
-  tags = {
-    Name = "${local.project}-nat"
-  }
+  cidr_block     = "0.0.0.0/0"
+  vpc_id         = module.vpc.vpc_id
+  nat_gateway_id = module.vpc.vpc_nat_id
+  subnet_id      = module.main_private6_c.subnet_id
+  route_name     = "main-rtb-private6-c"
 }
