@@ -22,16 +22,16 @@ terraform {
   # }
 
 
- backend "s3" {
-   #bucket name - set the permision, versioning and encryption
-   bucket = "eks-gpu-state"
-   #key is just a name, can be anything as i understand
-   key     = "state/terraform.tfstate"
-   region  = "eu-central-1"
-   encrypt = true
-   #the name of the dynamodb table, key MUST be "LockID"
-   dynamodb_table = "eks-gpu-dev-lock"
- }
+  backend "s3" {
+    #bucket name - set the permision, versioning and encryption
+    bucket = "eks-gpu-state"
+    #key is just a name, can be anything as i understand
+    key     = "state/terraform.tfstate"
+    region  = "eu-central-1"
+    encrypt = true
+    #the name of the dynamodb table, key MUST be "LockID"
+    dynamodb_table = "eks-gpu-dev-lock"
+  }
 
 }
 
