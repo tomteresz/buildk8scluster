@@ -131,24 +131,24 @@ resource "aws_eks_cluster" "eks_cluster" {
   ]
 }
 
-# this part is only for GH-Action
-# resource "aws_eks_access_entry" "eks_admin" {
-#   cluster_name  = aws_eks_cluster.eks_cluster.name
-#   principal_arn = "arn:aws:iam::651629222199:user/admino-cli"
-#   type          = "STANDARD"
-# }
+#this part is only when running from for GH-Action - gives my local user access
+resource "aws_eks_access_entry" "eks_admin" {
+  cluster_name  = aws_eks_cluster.eks_cluster.name
+  principal_arn = "arn:aws:iam::651629222199:user/admino-cli"
+  type          = "STANDARD"
+}
 
-# this part is only for GH-Action
-# resource "aws_eks_access_policy_association" "eks_admin" {
-#   cluster_name  = aws_eks_cluster.eks_cluster.name
-#   principal_arn = aws_eks_access_entry.eks_admin.principal_arn
+#this part is only when running from for GH-Action - gives my local user access
+resource "aws_eks_access_policy_association" "eks_admin" {
+  cluster_name  = aws_eks_cluster.eks_cluster.name
+  principal_arn = aws_eks_access_entry.eks_admin.principal_arn
 
-#   policy_arn = "arn:aws:eks::aws:cluster-access-policy/AmazonEKSClusterAdminPolicy"
+  policy_arn = "arn:aws:eks::aws:cluster-access-policy/AmazonEKSClusterAdminPolicy"
 
-#   access_scope {
-#     type = "cluster"
-#   }
-# }
+  access_scope {
+    type = "cluster"
+  }
+}
 
 resource "aws_launch_template" "default" {
   name_prefix            = "${var.project_name}-default"
