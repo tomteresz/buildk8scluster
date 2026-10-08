@@ -3,7 +3,8 @@ locals {
 }
 
 locals {
-  eks_oidc_issuer = data.aws_eks_cluster.eks_cluster_data.identity[0].oidc[0].issuer
+  #eks_oidc_issuer = data.aws_eks_cluster.eks_cluster_data.identity[0].oidc[0].issuer
+  eks_oidc_issuer = aws_eks_cluster.eks_cluster.identity[0].oidc[0].issuer
 }
 
 locals {
