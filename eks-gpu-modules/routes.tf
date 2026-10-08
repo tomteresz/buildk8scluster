@@ -7,6 +7,11 @@ resource "aws_route_table" "default" {
   }
 }
 
+resource "aws_main_route_table_association" "default" {
+  vpc_id         = module.vpc.vpc_id
+  route_table_id = aws_route_table.default.id
+}
+
 module "route_table_public1_a" {
   source = "./modules/routes"
 
