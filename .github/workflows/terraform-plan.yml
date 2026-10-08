@@ -9,7 +9,7 @@ permissions:
 
 env:
   AWS_REGION: eu-central-1
-  TF_WORKING_DIR: eks-gpu
+  TF_WORKING_DIR: eks-gpu-modules
 
 jobs:
   terraform-plan:
