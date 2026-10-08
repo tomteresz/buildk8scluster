@@ -22,7 +22,7 @@ resource "aws_eks_node_group" "small" {
   #capacity_type  = "ON_DEMAND"
   instance_types = [
     "t3.medium",
-    #"t3a.medium",
+    "t3a.medium",
   ]
   ami_type = "AL2023_x86_64_STANDARD"
 
@@ -30,5 +30,9 @@ resource "aws_eks_node_group" "small" {
     aws_eks_addon.vpc_cni,                      #needed
     aws_iam_role_policy_attachment.node_worker, #needed
     aws_iam_role_policy_attachment.node_ecr,    #for pull images - not necessary
+
+    module.route_table_private4_a,
+    module.route_table_private5_b,
+    module.route_table_private6_c
   ]
 }

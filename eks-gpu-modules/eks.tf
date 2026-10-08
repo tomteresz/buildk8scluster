@@ -123,11 +123,7 @@ resource "aws_eks_cluster" "eks_cluster" {
   ]
 
   depends_on = [
-    aws_iam_role_policy_attachment.eks_cluster_policy,
-    module.vpc.vpc_nat_id,
-    module.route_table_private4_a,
-    module.route_table_private5_b,
-    module.route_table_private6_c
+    aws_iam_role_policy_attachment.eks_cluster_policy
   ]
 }
 
@@ -187,16 +183,6 @@ resource "aws_launch_template" "default" {
 
 data "http" "my_ip" {
   url = "https://checkip.amazonaws.com/"
-}
-
-data "aws_eks_cluster" "eks_cluster_data" {
-  name       = aws_eks_cluster.eks_cluster.name
-  depends_on = [aws_eks_cluster.eks_cluster]
-}
-
-data "aws_eks_cluster_auth" "eks_cluster_auth" {
-  name       = aws_eks_cluster.eks_cluster.name
-  depends_on = [aws_eks_cluster.eks_cluster]
 }
 
 data "tls_certificate" "eks_oidc_issuer" {
