@@ -1,0 +1,34 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: nginx
+  namespace: nginx
+  annotations:
+    
+    alb.ingress.kubernetes.io/load-balancer-name: app-tom-tech
+    alb.ingress.kubernetes.io/scheme: internet-facing
+    alb.ingress.kubernetes.io/target-type: ip
+    alb.ingress.kubernetes.io/listen-ports: '[{"HTTP":80},{"HTTPS":443}]'
+    alb.ingress.kubernetes.io/ssl-redirect: '443'
+
+    alb.ingress.kubernetes.io/certificate-arn: arn:aws:acm:eu-central-1:651629222199:certificate/e12731b1-4833-4469-a0e6-2e33e9e44c40
+
+    # external-dns entry is redundant 
+    external-dns.alpha.kubernetes.io/hostname: app.tom-tech.info
+
+spec:
+  tls:
+  - hosts:
+      - app.tom-tech.info
+  ingressClassName: alb
+  rules:
+    - host: app.tom-tech.info
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: nginx-svc
+                port:
+                  number: 80
