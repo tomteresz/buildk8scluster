@@ -1,0 +1,39 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: vllm-ui-deploy
+  namespace: vllm-ui
+  labels:
+    app: nextjs-vllm-ui
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: nextjs-vllm-ui
+  template:
+    metadata:
+      labels:
+        app: nextjs-vllm-ui
+    spec:
+      containers:
+      - name: ui
+        image: ghcr.io/yoziru/nextjs-vllm-ui:latest
+        ports:
+        - containerPort: 3000
+        # env:
+        # # Update with your actual vLLM Service name and port
+        # - name: LLM_URL
+        #   value: "http://vllm-service.default.svc.cluster.local:8000"
+        # - name: VLLM_MODEL
+        #   value: "mistralai/Mistral-7B-Instruct-v0.3" 
+        # - name: VLLM_API_KEY
+        #   value: "ignored"
+        # - name: VLLM_TOKEN_LIMIT
+        #   value: "4096"
+        # resources:
+        #   limits:
+        #     cpu: "1"
+        #     memory: 1Gi
+        #   requests:
+        #     cpu: 500m
+        #     memory: 512Mi

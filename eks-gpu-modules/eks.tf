@@ -181,6 +181,41 @@ resource "aws_launch_template" "default" {
   }
 }
 
+resource "aws_launch_template" "gpu" {
+  name_prefix            = "${var.project_name}-gpu-"
+  update_default_version = true
+
+  key_name = var.ec2_ssh_key
+
+  block_device_mappings {
+    device_name = "/dev/xvda"
+
+    ebs {
+      volume_size           = 50
+      volume_type           = "gp3"
+      delete_on_termination = true
+      encrypted             = true
+    }
+  }
+
+  tag_specifications {
+    resource_type = "instance"
+
+    tags = {
+      Name = "${var.project_name}-gpu-node"
+      Role = "eks-gpu-worker"
+    }
+  }
+
+  tag_specifications {
+    resource_type = "volume"
+
+    tags = {
+      Name = "${var.project_name}-gpu-node-vol"
+    }
+  }
+}
+
 data "http" "my_ip" {
   url = "https://checkip.amazonaws.com/"
 }

@@ -1,0 +1,35 @@
+
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: vllm-ui-ingress
+  namespace: vllm-ui
+  annotations:
+
+    alb.ingress.kubernetes.io/load-balancer-name: vllm-ui
+    alb.ingress.kubernetes.io/scheme: internet-facing
+    alb.ingress.kubernetes.io/target-type: ip
+    alb.ingress.kubernetes.io/listen-ports: '[{"HTTP":80},{"HTTPS":443}]'
+    alb.ingress.kubernetes.io/ssl-redirect: '443'
+    
+    alb.ingress.kubernetes.io/certificate-arn: arn:aws:acm:eu-central-1:651629222199:certificate/e12731b1-4833-4469-a0e6-2e33e9e44c40
+
+    # external-dns entry is redundant 
+    external-dns.alpha.kubernetes.io/hostname: vllm-ui.tom-tech.info 
+
+spec:
+  tls:
+    - hosts:
+        - vllm-ui.tom-tech.info 
+  ingressClassName: alb
+  rules:
+    - host: vllm-ui.tom-tech.info 
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: vllm-ui-svc
+                port:
+                  number: 3000
