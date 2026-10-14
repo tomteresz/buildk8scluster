@@ -135,6 +135,32 @@ resource "aws_eks_addon" "ebs_csi" {
   addon_name               = "aws-ebs-csi-driver"
   service_account_role_arn = aws_iam_role.ebs_csi.arn
 
+  configuration_values = jsonencode({
+    controller = {
+      nodeSelector = {
+        "workload-type" = "system"
+      }
+
+      tolerations = [
+        {
+          key      = "CriticalAddonsOnly"
+          operator = "Exists"
+        },
+        {
+          operator          = "Exists"
+          effect            = "NoExecute"
+          tolerationSeconds = 300
+        },
+        {
+          key      = "workload-type"
+          operator = "Equal"
+          value    = "system"
+          effect   = "NoSchedule"
+        }
+      ]
+    }
+  })
+
   resolve_conflicts_on_create = "OVERWRITE"
   resolve_conflicts_on_update = "OVERWRITE"
 
