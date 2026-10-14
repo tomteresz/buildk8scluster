@@ -186,7 +186,7 @@ resource "aws_launch_template" "gpu" {
   update_default_version = true
 
   key_name = var.ec2_ssh_key
- 
+
   block_device_mappings {
     device_name = "/dev/xvda"
 

@@ -27,14 +27,14 @@ resource "aws_eks_node_group" "system" {
   ami_type = "AL2023_x86_64_STANDARD"
 
   labels = {
-  "workload-type" = "system"
-}
+    "workload-type" = "system"
+  }
 
-taint {
-  key    = "workload-type"
-  value  = "system"
-  effect = "NO_SCHEDULE"
-}
+  taint {
+    key    = "workload-type"
+    value  = "system"
+    effect = "NO_SCHEDULE"
+  }
 
   depends_on = [
     aws_eks_addon.vpc_cni,                      #needed

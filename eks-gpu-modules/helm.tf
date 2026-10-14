@@ -44,7 +44,7 @@ resource "helm_release" "nvidia_device_plugin" {
   namespace  = "kube-system"
   version    = "0.19.3"
 
- set = [
+  set = [
     {
       name  = "nodeSelector.workload-type"
       value = "gpu"
