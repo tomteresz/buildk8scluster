@@ -105,6 +105,23 @@ resource "aws_eks_addon" "external_dns" {
 
   configuration_values = jsonencode({
     policy = "sync"
+
+    nodeSelector = {
+      "workload-type" = "system"
+    }
+
+    tolerations = [
+      {
+        key      = "CriticalAddonsOnly"
+        operator = "Exists"
+      },
+      {
+        key      = "workload-type"
+        operator = "Equal"
+        value    = "system"
+        effect   = "NoSchedule"
+      }
+    ]
   })
 
   depends_on = [
