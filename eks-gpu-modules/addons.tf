@@ -36,6 +36,25 @@ resource "aws_eks_addon" "metrics_server" {
   cluster_name = aws_eks_cluster.eks_cluster.name
   addon_name   = "metrics-server"
 
+   configuration_values = jsonencode({
+    nodeSelector = {
+      "workload-type" = "system"
+    }
+
+    tolerations = [
+      {
+        key      = "CriticalAddonsOnly"
+        operator = "Exists"
+      },
+      {
+        key      = "workload-type"
+        operator = "Equal"
+        value    = "system"
+        effect   = "NoSchedule"
+      }
+    ]
+  })
+
   resolve_conflicts_on_create = "OVERWRITE"
   resolve_conflicts_on_update = "OVERWRITE"
 

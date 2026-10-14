@@ -25,7 +25,7 @@ spec:
         - name: VLLM_URL
           value: "http://vllm-svc.vllm.svc.cluster.local:8000"
         - name: VLLM_MODEL
-          value: "Qwen/Qwen2.5-3B-Instruct"
+          value: "Qwen/Qwen2.5-0.5B-Instruct"
         # - name: VLLM_API_KEY
         #   value: "ignored"
         - name: VLLM_TOKEN_LIMIT

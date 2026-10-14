@@ -32,7 +32,7 @@ resource "helm_release" "lbc" {
   ]
   depends_on = [
     aws_iam_role_policy_attachment.lbc,
-    aws_eks_node_group.small,
+    aws_eks_node_group.system,
     kubernetes_service_account_v1.lbc_sa
   ]
 }

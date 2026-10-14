@@ -1,8 +1,8 @@
 # node groups
 
-resource "aws_eks_node_group" "small" {
+resource "aws_eks_node_group" "system" {
   cluster_name    = aws_eks_cluster.eks_cluster.name
-  node_group_name = "${var.project_name}-small"
+  node_group_name = "${var.project_name}-system"
   node_role_arn   = aws_iam_role.eks_worker.arn
   subnet_ids      = [module.main_private4_a.subnet_id, module.main_private5_b.subnet_id, module.main_private6_c.subnet_id]
   version         = var.eks_cluster_ver
@@ -25,6 +25,16 @@ resource "aws_eks_node_group" "small" {
     "t3a.medium",
   ]
   ami_type = "AL2023_x86_64_STANDARD"
+
+  labels = {
+  "workload-type" = "system"
+}
+
+taint {
+  key    = "workload-type"
+  value  = "system"
+  effect = "NO_SCHEDULE"
+}
 
   depends_on = [
     aws_eks_addon.vpc_cni,                      #needed
@@ -51,7 +61,7 @@ resource "aws_eks_node_group" "gpu" {
   version = var.eks_cluster_ver
 
   scaling_config {
-    desired_size = 1
+    desired_size = 0
     min_size     = 0
     max_size     = 1
   }
