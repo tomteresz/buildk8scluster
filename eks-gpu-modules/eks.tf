@@ -146,8 +146,8 @@ resource "aws_eks_access_policy_association" "eks_admin" {
   }
 }
 
-resource "aws_launch_template" "default" {
-  name_prefix            = "${var.project_name}-default"
+resource "aws_launch_template" "system" {
+  name_prefix            = "${var.project_name}-system"
   update_default_version = true
 
   key_name = var.ec2_ssh_key
@@ -168,7 +168,7 @@ resource "aws_launch_template" "default" {
     resource_type = "instance"
 
     tags = {
-      Name = "${var.project_name}-node"
+      Name = "${var.project_name}-system-node"
       Role = "eks-worker"
     }
   }
@@ -176,7 +176,42 @@ resource "aws_launch_template" "default" {
   tag_specifications {
     resource_type = "volume"
     tags = {
-      Name = "${var.project_name}-node-vol"
+      Name = "${var.project_name}-system-node-vol"
+    }
+  }
+}
+
+resource "aws_launch_template" "apps" {
+  name_prefix            = "${var.project_name}-apps"
+  update_default_version = true
+
+  key_name = var.ec2_ssh_key
+
+  block_device_mappings {
+    device_name = "/dev/xvda"
+
+    ebs {
+      volume_size           = 20
+      volume_type           = "gp3"
+      delete_on_termination = true
+      encrypted             = true
+    }
+  }
+
+  # EC2 instance tags: applied to every new EKS worker node
+  tag_specifications {
+    resource_type = "instance"
+
+    tags = {
+      Name = "${var.project_name}-apps-node"
+      Role = "eks-worker"
+    }
+  }
+
+  tag_specifications {
+    resource_type = "volume"
+    tags = {
+      Name = "${var.project_name}-apps-node-vol"
     }
   }
 }
