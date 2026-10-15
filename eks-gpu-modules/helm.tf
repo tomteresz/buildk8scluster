@@ -28,27 +28,27 @@ resource "helm_release" "lbc" {
     {
       name  = "vpcId"
       value = module.vpc.vpc_id
-    },
-    {
-      name  = "nodeSelector.workload-type"
-      value = "system"
-    },
-    {
-      name  = "tolerations[0].key"
-      value = "workload-type"
-    },
-    {
-      name  = "tolerations[0].operator"
-      value = "Equal"
-    },
-    {
-      name  = "tolerations[0].value"
-      value = "system"
-    },
-    {
-      name  = "tolerations[0].effect"
-      value = "NoSchedule"
     }
+    # {
+    #   name  = "nodeSelector.workload-type"
+    #   value = "system"
+    # },
+    # {
+    #   name  = "tolerations[0].key"
+    #   value = "workload-type"
+    # },
+    # {
+    #   name  = "tolerations[0].operator"
+    #   value = "Equal"
+    # },
+    # {
+    #   name  = "tolerations[0].value"
+    #   value = "system"
+    # },
+    # {
+    #   name  = "tolerations[0].effect"
+    #   value = "NoSchedule"
+    # }
   ]
   depends_on = [
     aws_iam_role_policy_attachment.lbc,
