@@ -52,7 +52,7 @@ resource "helm_release" "lbc" {
   ]
 
   disable_openapi_validation = true
-  
+
   depends_on = [
     aws_iam_role_policy_attachment.lbc,
     aws_eks_node_group.system,
