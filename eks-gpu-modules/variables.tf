@@ -28,7 +28,7 @@ variable "eks_cluster" {
 
 variable "eks_cluster_ver" {
   type    = string
-  default = "1.36"
+  default = "1.35"
 }
 
 variable "ec2_ssh_key" {
