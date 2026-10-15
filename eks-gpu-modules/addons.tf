@@ -89,6 +89,23 @@ resource "aws_eks_addon" "eks_node_monitoring_agent" {
   cluster_name = aws_eks_cluster.eks_cluster.name
   addon_name   = "eks-node-monitoring-agent"
 
+  configuration_values = jsonencode({
+    dcgmAgent = {
+      nodeSelector = {
+        "workload-type" = "gpu"
+      }
+
+      tolerations = [
+        {
+          key      = "nvidia.com/gpu"
+          operator = "Equal"
+          value    = "true"
+          effect   = "NoSchedule"
+        }
+      ]
+    }
+  })
+
   resolve_conflicts_on_create = "OVERWRITE"
   resolve_conflicts_on_update = "OVERWRITE"
 
