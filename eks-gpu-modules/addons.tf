@@ -59,6 +59,7 @@ resource "aws_eks_addon" "coredns" {
 resource "aws_eks_addon" "metrics_server" {
   cluster_name = aws_eks_cluster.eks_cluster.name
   addon_name   = "metrics-server"
+  addon_version = "v0.9.0-eksbuild.11"
 
   configuration_values = jsonencode({
     nodeSelector = {
