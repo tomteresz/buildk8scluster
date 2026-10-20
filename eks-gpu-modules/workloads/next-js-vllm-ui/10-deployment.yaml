@@ -15,9 +15,16 @@ spec:
       labels:
         app: nextjs-vllm-ui
     spec:
+      nodeSelector:
+        workload-type: apps
+      tolerations:
+        - key: "workload-type"
+          operator: "Equal"
+          value: "apps"
+          effect: "NoSchedule"
       containers:
       - name: ui
-        image: ghcr.io/yoziru/nextjs-vllm-ui:latest
+        image: ghcr.io/yoziru/nextjs-vllm-ui@sha256:946e534d58f9b1ad081ec0ed51711f634cdfc7e900be8999329e1f3cc6c72839
         ports:
         - containerPort: 3000
         env:
@@ -31,6 +38,27 @@ spec:
         - name: VLLM_TOKEN_LIMIT
           #value: "4096"
           value: "8192"
+        startupProbe:
+          httpGet:
+            path: /
+            port: 3000
+          periodSeconds: 10
+          timeoutSeconds: 5
+          failureThreshold: 60
+        readinessProbe:
+          httpGet:
+            path: /
+            port: 3000
+          periodSeconds: 10
+          timeoutSeconds: 5
+          failureThreshold: 3
+        livenessProbe:
+          httpGet:
+            path: /
+            port: 3000
+          periodSeconds: 30
+          timeoutSeconds: 5
+          failureThreshold: 3
         resources:
           limits:
             cpu: "1"
