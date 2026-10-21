@@ -48,6 +48,23 @@ resource "helm_release" "lbc" {
     {
       name  = "tolerations[0].effect"
       value = "NoSchedule"
+    },
+
+    {
+      name  = "topologySpreadConstraints[0].maxSkew"
+      value = "1"
+    },
+    {
+      name  = "topologySpreadConstraints[0].topologyKey"
+      value = "kubernetes.io/hostname"
+    },
+    {
+      name  = "topologySpreadConstraints[0].whenUnsatisfiable"
+      value = "DoNotSchedule"
+    },
+    {
+      name  = "topologySpreadConstraints[0].labelSelector.matchLabels.app\\.kubernetes\\.io/name"
+      value = "aws-load-balancer-controller"
     }
   ]
 
