@@ -93,6 +93,20 @@ resource "aws_eks_addon" "metrics_server" {
         effect   = "NoSchedule"
       }
     ]
+
+    topologySpreadConstraints = [
+      {
+        maxSkew           = 1
+        topologyKey       = "kubernetes.io/hostname"
+        whenUnsatisfiable = "DoNotSchedule"
+
+        labelSelector = {
+          matchLabels = {
+            "app.kubernetes.io/name" = "metrics-server"
+          }
+        }
+      }
+    ]
   })
 
   resolve_conflicts_on_create = "OVERWRITE"
