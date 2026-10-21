@@ -48,6 +48,21 @@ resource "aws_eks_addon" "coredns" {
         effect   = "NoSchedule"
       }
     ]
+
+    topologySpreadConstraints = [
+      {
+        maxSkew           = 1
+        topologyKey       = "kubernetes.io/hostname"
+        whenUnsatisfiable = "DoNotSchedule"
+
+        labelSelector = {
+          matchLabels = {
+            "k8s-app" = "kube-dns"
+          }
+        }
+      }
+    ]
+
   })
 
   resolve_conflicts_on_create = "OVERWRITE"
