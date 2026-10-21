@@ -207,18 +207,18 @@ resource "aws_eks_addon" "ebs_csi" {
       ]
 
       topologySpreadConstraints = [
-      {
-        maxSkew           = 1
-        topologyKey       = "kubernetes.io/hostname"
-        whenUnsatisfiable = "DoNotSchedule"
+        {
+          maxSkew           = 1
+          topologyKey       = "kubernetes.io/hostname"
+          whenUnsatisfiable = "DoNotSchedule"
 
-        labelSelector = {
-          matchLabels = {
-            "app.kubernetes.io/name" = "aws-ebs-csi-driver"
+          labelSelector = {
+            matchLabels = {
+              "app.kubernetes.io/name" = "aws-ebs-csi-driver"
+            }
           }
         }
-      }
-    ]
+      ]
     }
   })
 
