@@ -205,6 +205,20 @@ resource "aws_eks_addon" "ebs_csi" {
           effect   = "NoSchedule"
         }
       ]
+
+      topologySpreadConstraints = [
+      {
+        maxSkew           = 1
+        topologyKey       = "kubernetes.io/hostname"
+        whenUnsatisfiable = "DoNotSchedule"
+
+        labelSelector = {
+          matchLabels = {
+            "app.kubernetes.io/name" = "aws-ebs-csi-driver"
+          }
+        }
+      }
+    ]
     }
   })
 
